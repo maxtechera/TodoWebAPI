@@ -30,5 +30,25 @@ namespace TodoApi.Controllers
         public ActionResult<List<TodoItem>> Get() {
             return _context.TodoItems.ToList();
         }
+
+        [HttpGet("{id}", Name = "GetTodo")]
+        public ActionResult<TodoItem> GetById(long id)
+        {
+            var item = _context.TodoItems.Find(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+        [HttpPost]
+        public IActionResult Create(TodoItem item)
+        {
+            _context.TodoItems.Add(item);
+            _context.SaveChanges();
+
+            return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
+        }
     }
 }
